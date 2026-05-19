@@ -82,6 +82,10 @@ All datasets are available on Kaggle. Download and place CSV files in the data/ 
 - **Notebooks** — Kaggle (GPU T4 x2)
 
 ---
+> ⚠️ **Note:** The API is hosted on Render free tier.
+> If the first request takes 30–60 seconds, 
+> the server is waking from sleep — this is normal.
+> Subsequent requests will be instant.
 
 ##  Related Repositories
 
@@ -96,5 +100,4 @@ All datasets are available on Kaggle. Download and place CSV files in the data/ 
 
 **Bennjimatakwa**
 **MabroukYahya**
-Kaggle: https://www.kaggle.com/bennjimatakwa
 Kaggle: https://www.kaggle.com/bennjimatakwa
