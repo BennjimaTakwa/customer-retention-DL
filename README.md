@@ -15,12 +15,12 @@ This project builds an end-to-end machine learning pipeline that:
 - Deploys a **production-ready REST API** with FastAPI + Docker
 
 ---
-
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                        DATA LAYER                               │
 │   624,014 reviews → text cleaning → 27 engineered features     │
 └──────────────────────────┬──────────────────────────────────────┘
-↓
+                           ↓
 ┌─────────────────────────────────────────────────────────────────┐
 │                       MODEL LAYER                               │
 │                                                                 │
@@ -35,20 +35,21 @@ This project builds an end-to-end machine learning pipeline that:
 │  │      K-Means Clustering         │                           │
 │  │   5 behavioral segments         │                           │
 │  │   Silhouette = 0.42             │                           │
-│  └──────────────┬──────────────────┘                          │
+│  └──────────────┬──────────────────┘                           │
 │                 ↓                                              │
 │  ┌─────────────────────────────────┐                           │
 │  │       Dual-Head MLP             │                           │
 │  │  Sentiment Head → Acc = 88.2%  │                           │
 │  │  Segment Head   → Acc = 55.3%  │                           │
-│  └──────────────┬──────────────────┘                          │
-└─────────────────┼───────────────────────────────────────────── ┘
-↓
+│  └──────────────┬──────────────────┘                           │
+└─────────────────┼───────────────────────────────────────────────┘
+                  ↓
 ┌─────────────────────────────────────────────────────────────────┐
 │                     SERVING LAYER                               │
 │   FastAPI REST API  →  Docker Container  →  Render Cloud       │
 │   Streamlit Dashboard  →  Streamlit Cloud                      │
 └─────────────────────────────────────────────────────────────────┘
+```
 
 
 ##  Project Structure
@@ -68,13 +69,63 @@ notebooks/
 
 
 ##  Models
+## Model 1 — DistilBERT Sentiment Classifier
 
-| Model | Task | Performance |
-|---|---|---|
-| DistilBERT | Sentiment Classification | F1 = 0.718 |
-| BiLSTM | Sentiment Classification | F1 = 0.610 |
-| MLP (sentiment head) | Sentiment Prediction | Acc = 88.2% |
-| MLP (segment head) | Customer Segmentation | Acc = 55.3% |
+| Metric | Score |
+|--------|-------|
+| Macro F1 | **0.718** |
+| Accuracy | **85.2%** |
+| F1 Negative | 0.71 |
+| F1 Neutral | 0.58 |
+| F1 Positive | 0.87 |
+
+---
+
+## Model 2 — BiLSTM Sentiment Classifier
+
+```text
+Architecture : Embedding(30k, 256) → BiLSTM(256×2, layers=2) → Attention → Linear(3)
+Task         : 3-class sentiment classification
+Training     : 15,000 balanced samples | 10 epochs (early stop=3) | AdamW lr=1e-3
+Parameters   : ~10.4M (6.4× lighter than DistilBERT)
+```
+
+| Metric | Score |
+|--------|-------|
+| Macro F1 | **0.610** |
+| Accuracy | **60.7%** |
+| F1 Negative | 0.55 |
+| F1 Neutral | 0.58 |
+| F1 Positive | 0.71 |
+
+---
+
+## Model 3 — Customer Clustering
+
+```text
+Algorithm    : K-Means (K=5) + DBSCAN + Agglomerative + GMM
+Features     : 38 behavioral + sentiment + platform features
+Validation   : Silhouette Score | Calinski-Harabasz | Davies-Bouldin
+Best K       : 5 (by silhouette)
+```
+
+---
+
+## Model 4 — Dual-Head MLP
+
+```text
+Architecture : Input(38) → Dense(256) → ReLU → Dropout(0.3)
+→ Dense(128) → ReLU → Dropout(0.3)
+├── Head 1: Linear(3)  → Softmax  [sentiment]
+└── Head 2: Linear(5)  → Softmax  [segment]
+```
+
+| Head | Task | Accuracy |
+|------|------|----------|
+| Sentiment | 3-class prediction | **88.2%** |
+| Segment | 5-class prediction | **55.3%** |
+
+---
 
 ---
 
