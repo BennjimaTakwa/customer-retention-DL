@@ -16,6 +16,41 @@ This project builds an end-to-end machine learning pipeline that:
 
 ---
 
+┌─────────────────────────────────────────────────────────────────┐
+│                        DATA LAYER                               │
+│   624,014 reviews → text cleaning → 27 engineered features     │
+└──────────────────────────┬──────────────────────────────────────┘
+↓
+┌─────────────────────────────────────────────────────────────────┐
+│                       MODEL LAYER                               │
+│                                                                 │
+│  ┌─────────────────┐    ┌─────────────────┐                    │
+│  │   DistilBERT    │    │     BiLSTM      │                    │
+│  │  (67M params)   │    │  (10.4M params) │                    │
+│  │  F1 = 0.718     │    │  F1 = 0.610     │                    │
+│  └────────┬────────┘    └────────┬────────┘                    │
+│           └──────────┬───────────┘                             │
+│                      ↓                                         │
+│  ┌─────────────────────────────────┐                           │
+│  │      K-Means Clustering         │                           │
+│  │   5 behavioral segments         │                           │
+│  │   Silhouette = 0.42             │                           │
+│  └──────────────┬──────────────────┘                          │
+│                 ↓                                              │
+│  ┌─────────────────────────────────┐                           │
+│  │       Dual-Head MLP             │                           │
+│  │  Sentiment Head → Acc = 88.2%  │                           │
+│  │  Segment Head   → Acc = 55.3%  │                           │
+│  └──────────────┬──────────────────┘                          │
+└─────────────────┼───────────────────────────────────────────── ┘
+↓
+┌─────────────────────────────────────────────────────────────────┐
+│                     SERVING LAYER                               │
+│   FastAPI REST API  →  Docker Container  →  Render Cloud       │
+│   Streamlit Dashboard  →  Streamlit Cloud                      │
+└─────────────────────────────────────────────────────────────────┘
+
+
 ##  Project Structure
 notebooks/
 ├── nb-01  Data Collection & Scraping
@@ -30,6 +65,7 @@ notebooks/
 └── nb-10  FastAPI + Docker Deployment
 
 ---
+
 
 ##  Models
 
@@ -71,6 +107,15 @@ All datasets are available on Kaggle. Download and place CSV files in the data/ 
 
 ---
 
+##  MLflow Experiments
+
+| Experiment | Model | Best Val F1 | Run ID |
+|------------|-------|-------------|--------|
+| #1 | DistilBERT | 0.718 | `distilbert-base-v1` |
+| #2 | BiLSTM | 0.610 | `bilstm-v1` |
+| #3 | Clustering | sil=0.42 | `clustering-v1` |
+
+All experiments tracked with hyperparameters, metrics per epoch, confusion matrices, and model artifacts.
 ##  Tech Stack
 
 - **ML/DL** — PyTorch, Transformers, Scikit-learn
@@ -98,6 +143,43 @@ All datasets are available on Kaggle. Download and place CSV files in the data/ 
 
 ##  Authors
 
-**Bennjimatakwa**
-**MabroukYahya**
-Kaggle: https://www.kaggle.com/bennjimatakwa
+<table>
+  <tr>
+    <td align="center">
+      <b>Takwa Bennjima</b><br>
+      <a href="https://www.kaggle.com/bennjimatakwa">
+        <img src="https://img.shields.io/badge/Kaggle-bennjimatakwa-blue?logo=kaggle"/>
+      </a><br>
+      <a href="https://github.com/BennjimaTakwa">
+        <img src="https://img.shields.io/badge/GitHub-BennjimaTakwa-black?logo=github"/>
+      </a>
+    </td>
+    <td align="center">
+      <b>Yahya Mabrouk</b><br>
+      <a href="https://www.kaggle.com/mabroukyahya">
+        <img src="https://img.shields.io/badge/Kaggle-mabroukyahya-blue?logo=kaggle"/>
+      </a><br>
+      <a href="https://github.com/MabroukYahya">
+        <img src="https://img.shields.io/badge/GitHub-MabroukYahya-black?logo=github"/>
+      </a>
+    </td>
+  </tr>
+</table>
+
+---
+
+##  License
+
+This project is licensed under the MIT License.
+
+---
+
+<div align="center">
+
+**École Polytechnique de Sousse — Final Year Project 2024–2025**
+
+*Built with ❤️ using PyTorch, HuggingFace, and FastAPI*
+
+⭐ Star this repo if you find it useful!
+
+</div>
