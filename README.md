@@ -210,7 +210,7 @@ All experiments tracked with hyperparameters, metrics per epoch, confusion matri
       <a href="https://www.kaggle.com/mabroukyahya">
         <img src="https://img.shields.io/badge/Kaggle-mabroukyahya-blue?logo=kaggle"/>
       </a><br>
-      <a href="https://github.com/MabroukYahya">
+      <a href="https://github.com/yahiaelmabrouk">
         <img src="https://img.shields.io/badge/GitHub-MabroukYahya-black?logo=github"/>
       </a>
     </td>
